@@ -62,14 +62,3 @@ class ScrollableFrame(tk.Frame):
     def pack(self, **kw):
         "We should not pack() this object"
         return self
-
-if __name__=="__main__":
-    winfo = (800,600,100,100)
-    master = tk.Tk()
-    master.title("ScrollableFrame Test")
-    master.wm_geometry("%dx%d+%d+%d" % winfo)
-    f = ScrollableFrame(master)
-    for i in range(100):
-        tk.Label(f, text="Label Item #%d" % i).pack()
-    f.update()
-    master.mainloop()
