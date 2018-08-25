@@ -2,8 +2,8 @@
 공지 모아보기
 
 ## News
-버전 proto.2 완성 - Gui와 선택적 로딩 도입
-버전 proto.1 완성
+* 버전 proto.2 완성 - Gui와 선택적 로딩 도입
+* 버전 proto.1 완성
 
 ## 사용법
 ```
@@ -17,6 +17,7 @@ python3 main.py
 1. it.yonsei.ac.kr
 2. yonsei.ac.kr
 3. 원주학술정보원 자치회 책갈피
+
 추가 사항 요청 받습니다.
 
 ## Todo
