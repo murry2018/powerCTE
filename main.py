@@ -1,34 +1,10 @@
 #-*- coding: utf-8 -*-
+from ui import *
+import siteinfo as site
 
-## powerCTE Version proto.1
-## If there is unicode issue, please use latest version of python.
-import requests
-from bs4 import BeautifulSoup as bs
-
-class Site:
-    def __init__(self, url, parseRule):
-        self.url = url
-        self.parse = parseRule
-
-def rule_wlibfacebook(Soup):
-    mainContents = Soup.find('div', {'role':'main'})
-    v = zip(mainContents.select('div.userContent'),
-            mainContents.select('span.timestampContent'))
-    for userContent, timestamp in v:
-        print(timestamp.contents[0], end=':: ')
-        print(userContent.select('p')[0].contents[0].strip())
-
-def rule_ityonsei(soup):
-    titles = map(lambda s: s.find('a').contents[0].strip(),
-                 soup.select('td.title'))
-    when = map(lambda s: s.contents[0].strip(),
-               soup.select('td.time'))
-    v = zip(titles, when)
-    for title, timestamp in v:
-        print(timestamp, end=':: ')
-        print(title)
-
+# 연세대학교
 def rule_yonsei(soup):
+    items = []
     mainContents = soup.select('ul.board_list')[0].findAll('li')
     for content in mainContents:
         if 'class' not in content.attrs:
@@ -37,25 +13,45 @@ def rule_yonsei(soup):
             title = "NOTICE: "
             title += content.find('strong').text.replace("[공지]", "").strip()
         when = content.select('span.tline')[1].text.strip()
-        print(when, end=':: ')
-        print(title)
-        
-urls = ["http://it.yonsei.ac.kr/index.php?mid=board_notice",
-        "http://www.yonsei.ac.kr/wj/support/notice.jsp",
-        "https://www.facebook.com/pg/ysbookmark/posts/?ref=page_internal"]
+        items.append((when+':: '+title, "http://www.yonsei.ac.kr/wj/support/notice.jsp"))
+    return items
 
-sites = []
-sites.append(Site(urls[0], rule_ityonsei))
-sites.append(Site(urls[1], rule_yonsei))
-sites.append(Site(urls[2], rule_wlibfacebook))
+# 컴퓨터정보통신공학부
+def rule_ityonsei(soup):
+    items = []
+    titles = map(lambda s: s.find('a').contents[0].strip(),
+                 soup.select('td.title'))
+    when = map(lambda s: s.contents[0].strip(),
+               soup.select('td.time'))
+    v = zip(titles, when)
+    for title, timestamp in v:
+        items.append((timestamp+':: '+title, "http://it.yonsei.ac.kr/index.php?mid=board_notice"))
+    return items
 
-print("[PowerCTE proto.1]")
+# 원주학술정보센터자치회
+def rule_wlibfacebook(Soup):
+    items = []
+    mainContents = Soup.find('div', {'role':'main'})
+    v = zip(mainContents.select('div.userContent'),
+            mainContents.select('span.timestampContent'))
+    for userContent, timestamp in v:
+        when = timestamp.contents[0]
+        title = userContent.select('p')[0].contents[0].strip()
+        items.append((when+':: '+title, "http://it.yonsei.ac.kr/index.php?mid=board_notice"))
+    return items
 
+app = myApp()
+sites = [
+    site.Site("연세대학교",
+              "http://www.yonsei.ac.kr/wj/support/notice.jsp",
+              rule_yonsei),
+    site.Site("컴퓨터정보통신공학부",
+              "http://it.yonsei.ac.kr/index.php?mid=board_notice",
+              rule_ityonsei),
+    site.Site("원주학술정보센터 자치회 책갈피",
+              "https://www.facebook.com/pg/ysbookmark/posts/?ref=page_internal",
+              rule_wlibfacebook)
+    ]       
 for site in sites:
-    print("\nNow traveling ", site.url, " ...")
-    r = requests.get(site.url)
-    print("Status:",r.status_code)
-    print("Coding:",r.encoding)
-    input("Show contnets? [Press Enter]")
-    soup = bs(r.text, features="html.parser")
-    site.parse(soup)
+    app.add_site(site)
+app.run()
