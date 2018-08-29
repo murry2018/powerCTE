@@ -2,7 +2,7 @@
 from ui import *
 import mysites
 
-app = myApp()
+app = DefaultApp()
 for site in mysites.sites:
-    app.add_site(site)
+    app.add_site(site.name, site.url, site.method)
 app.run()

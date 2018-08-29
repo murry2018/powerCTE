@@ -31,7 +31,7 @@ def rule_ityonsei(soup):
 # 원주학술정보센터자치회
 def rule_wlibfacebook(Soup):
     items = []
-    url = "http://it.yonsei.ac.kr/index.php?mid=board_notice"
+    url = "https://www.facebook.com/pg/ysbookmark/posts/?ref=page_internal"
     mainContents = Soup.find('div', {'role':'main'})
     v = zip(mainContents.select('div.userContent'),
             mainContents.select('span.timestampContent'))

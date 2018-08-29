@@ -3,14 +3,16 @@ import tkinter.font as tkfont
 import webbrowser as wwwbro
 
 class HyperLabel(tk.Label):
-    def __init__(self, master, text, color=None, underline=False):
+    def __init__(self, master, text, color=None, underline=False, url=None):
         super().__init__(master, text=text, cursor="hand1")
         if color:
             self.config(fg=color)
-            if underline:
-                f = tkfont.Font(self, self.cget("font"))
-                f.configure(underline=True)
-                self.configure(font=f)
+        if underline:
+            f = tkfont.Font(self, self.cget("font"))
+            f.configure(underline=True)
+            self.configure(font=f)
+        if url:
+            self.onclick_openurl(url)
     def onclick_openurl(self, url):
         openurl = lambda e: wwwbro.open_new(url)
         self.bind("<Button-1>", openurl)

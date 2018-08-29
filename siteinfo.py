@@ -18,6 +18,9 @@ class Site:
         self.items = None
     def set_rule(self, parseRule):
         self.parse = parseRule
+    def method(self):
+        self.get_page()
+        return self.get_items()
     def get_page(self):
         r = requests.get(self.url)
         self.soup = bs(r.text, 'html.parser')
