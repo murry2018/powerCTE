@@ -4,5 +4,5 @@ import mysites
 
 app = DefaultApp()
 for site in mysites.sites:
-    app.add_site(site.name, site.url, site.method)
+    app.add_site(site.name, site.url, site.method, site.get_notunique)
 app.run()

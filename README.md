@@ -2,6 +2,7 @@
 공지 모아보기
 
 ## News
+* 버전 proto.3 완성 - 새로운 공지 알림 기능 추가
 * 버전 proto.2 완성 - Gui와 선택적 로딩 도입
 * 버전 proto.1 완성
 
@@ -22,10 +23,10 @@ python3 main.py
 
 ## Todo
 0. 스파게티 코드 리팩토링 [시급]
-1. 새로운 공지 알림
+1. 새로운 공지 알림 [Done in proto.3]
 2. Windows 사용자를 위한 실행파일 팩
 3. Gui [In progress]
 4. 게시판 토글 [In progress]
 5. 시작 프로그램 등록 옵션(opt-in)
 6. 실시간 알림
-7. ui.py를 미니 프레임워크로 만들기
+7. ui.py를 미니 프레임워크로 만들기 [보류]

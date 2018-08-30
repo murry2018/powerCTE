@@ -71,7 +71,7 @@ class DefaultApp:
         master.title(title)
         self.container = tkw.ScrollableFrame(master)
         self.sites = []
-    def add_site(self, name, url, method):
+    def add_site(self, name, url, method, notuni_command):
         # Site widget
         newsite = SiteWidget(self.container, name, url)
         self.sites.append(newsite)
@@ -85,7 +85,7 @@ class DefaultApp:
         button_load_handler = partial(self.load_item, name, method, dataholder)
         newsite.itempanel.on_button_load_click(button_load_handler)
         # SiteWidget.ItemPanel.button_load <<LoadDone>> handler
-        loaddone_handler = partial(self.load_done, dataholder)
+        loaddone_handler = partial(self.load_done, dataholder, notuni_command)
         newsite.bind("<<LoadDone>>", loaddone_handler)
     def more_item(self, sitewidget):
         """ EventHandler for SiteWidget.TitleBar.button_more """
@@ -109,12 +109,25 @@ class DefaultApp:
         panel.button_load.pack()
         thread = threading.Thread(target=load, args=(name, method))
         thread.start()
-    def load_done(self, dataholder, e):
+    def load_done(self, dataholder, unique_command, e):
         """ Event handler for SiteWidget.ItemPanel.button_load <<LoadDone>>
             This handler controls app UI """
         panel = dataholder.sitewidget.itempanel
         panel.button_load.pack_forget()
         for name, url in dataholder.items:
+            tkw.HyperLabel(panel, name, url=url,
+                           color="blue", underline=True).pack()
+        panel.button_load = tk.Button(panel, text="모두보기")
+        panel.button_load.pack()
+        onclick = partial(self.append_notunique, dataholder, unique_command)
+        panel.button_load.bind('<Button-1>', onclick)
+        self.container.update()
+    def append_notunique(self, dataholder, notuni_command, e):
+        panel = dataholder.sitewidget.itempanel
+        items = notuni_command()
+        panel.button_load.pack_forget()
+        tk.Label(panel, text="-------").pack()
+        for name, url in items:
             tkw.HyperLabel(panel, name, url=url,
                            color="blue", underline=True).pack()
         self.container.update()
