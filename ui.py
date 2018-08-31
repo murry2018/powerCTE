@@ -28,6 +28,7 @@ class TitleBar(tk.Frame):
 class ItemPanel(tk.Frame):
     load_text = "불러오기"
     loading_text = "로딩 중..."
+    all_text = "모두보기"
     __slots__ = ['button_load', '_open']
     def __init__(self, parent):
         super().__init__(parent)
@@ -117,7 +118,7 @@ class DefaultApp:
         for name, url in dataholder.items:
             tkw.HyperLabel(panel, name, url=url,
                            color="blue", underline=True).pack()
-        panel.button_load = tk.Button(panel, text="모두보기")
+        panel.button_load = tk.Button(panel, text=ItemPanel.all_text)
         panel.button_load.pack()
         onclick = partial(self.append_notunique, dataholder, unique_command)
         panel.button_load.bind('<Button-1>', onclick)
