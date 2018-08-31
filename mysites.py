@@ -1,4 +1,4 @@
-import siteinfo as site
+from siteinfo import SiteInfo
 
 # 연세대학교
 def rule_yonsei(soup):
@@ -42,13 +42,13 @@ def rule_wlibfacebook(Soup):
     return items
 
 sites = [
-    site.Site("연세대학교",
-              "http://www.yonsei.ac.kr/wj/support/notice.jsp",
-              rule_yonsei),
-    site.Site("컴퓨터정보통신공학부",
-              "http://it.yonsei.ac.kr/index.php?mid=board_notice",
-              rule_ityonsei),
-    site.Site("원주학술정보센터 자치회 책갈피",
-              "https://www.facebook.com/pg/ysbookmark/posts/?ref=page_internal",
-              rule_wlibfacebook)
+    SiteInfo("연세대학교",
+             "http://www.yonsei.ac.kr/wj/support/notice.jsp",
+             rule=rule_yonsei),
+    SiteInfo("컴퓨터정보통신공학부",
+             "http://it.yonsei.ac.kr/index.php?mid=board_notice",
+             rule=rule_ityonsei),
+    SiteInfo("원주학술정보센터 자치회 책갈피",
+             "https://www.facebook.com/pg/ysbookmark/posts/?ref=page_internal",
+             rule=rule_wlibfacebook)
     ]
