@@ -72,9 +72,11 @@ class DefaultApp:
         master.title(title)
         self.container = tkw.ScrollableFrame(master)
         self.sites = []
-    def add_site(self, name, url, method, notuni_command):
+    #def add_site(self, name, url, method, notuni_command):
+    def add_site(self, site):
         # Site widget
-        newsite = SiteWidget(self.container, name, url)
+        #newsite = SiteWidget(self.container, name, url)
+        newsite = SiteWidget(self.container, site.name, site.url)
         self.sites.append(newsite)
         newsite.pack(fill=tk.X)
         self.container.update()
@@ -83,10 +85,12 @@ class DefaultApp:
         newsite.titlebar.on_button_more_click(button_more_handler)
         # SiteWidget.ItemPanel.button_load handler
         dataholder = ItemHolder(sitewidget=newsite, items=[])
-        button_load_handler = partial(self.load_item, name, method, dataholder)
+        #button_load_handler = partial(self.load_item, name, method, dataholder)
+        button_load_handler = partial(self.load_item, site, dataholder)
         newsite.itempanel.on_button_load_click(button_load_handler)
         # SiteWidget.ItemPanel.button_load <<LoadDone>> handler
-        loaddone_handler = partial(self.load_done, dataholder, notuni_command)
+        #loaddone_handler = partial(self.load_done, dataholder, notuni_command)
+        loaddone_handler = partial(self.load_done, dataholder, site.collectCommonItems)
         newsite.bind("<<LoadDone>>", loaddone_handler)
     def more_item(self, sitewidget):
         """ EventHandler for SiteWidget.TitleBar.button_more """
@@ -97,18 +101,21 @@ class DefaultApp:
             sitewidget.show_panel()
             sitewidget.titlebar.button_more.config(text=TitleBar.hide_text)
         self.container.update()
-    def load_item(self, name, method, dataholder):
+    def load_item(self, site, dataholder):
         """ Event handler for SiteWidget.ItemPanel.button_load """
         "`dataholder' holds sitewidget and list of items"
-        def load(name, method):
-            dataholder.items = method()
+        def load(site):
+            site.getRefreshedItems()
+            site.loadData()
+            site.saveData()
+            dataholder.items = site.collectLatestItems()
             print("LoadDone")
             dataholder.sitewidget.event_generate('<<LoadDone>>', when='tail')
         panel = dataholder.sitewidget.itempanel
         panel.button_load.pack_forget()
         panel.button_load = tk.Label(panel, text=ItemPanel.loading_text)
         panel.button_load.pack()
-        thread = threading.Thread(target=load, args=(name, method))
+        thread = threading.Thread(target=load, args=(site,))
         thread.start()
     def load_done(self, dataholder, unique_command, e):
         """ Event handler for SiteWidget.ItemPanel.button_load <<LoadDone>>
