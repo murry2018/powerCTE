@@ -72,10 +72,8 @@ class DefaultApp:
         master.title(title)
         self.container = tkw.ScrollableFrame(master)
         self.sites = []
-    #def add_site(self, name, url, method, notuni_command):
     def add_site(self, site):
         # Site widget
-        #newsite = SiteWidget(self.container, name, url)
         newsite = SiteWidget(self.container, site.name, site.url)
         self.sites.append(newsite)
         newsite.pack(fill=tk.X)
@@ -85,11 +83,9 @@ class DefaultApp:
         newsite.titlebar.on_button_more_click(button_more_handler)
         # SiteWidget.ItemPanel.button_load handler
         dataholder = ItemHolder(sitewidget=newsite, items=[])
-        #button_load_handler = partial(self.load_item, name, method, dataholder)
         button_load_handler = partial(self.load_item, site, dataholder)
         newsite.itempanel.on_button_load_click(button_load_handler)
         # SiteWidget.ItemPanel.button_load <<LoadDone>> handler
-        #loaddone_handler = partial(self.load_done, dataholder, notuni_command)
         loaddone_handler = partial(self.load_done, dataholder, site.collectCommonItems)
         newsite.bind("<<LoadDone>>", loaddone_handler)
     def more_item(self, sitewidget):
