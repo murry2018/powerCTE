@@ -37,7 +37,11 @@ def rule_wlibfacebook(Soup):
             mainContents.select('span.timestampContent'))
     for userContent, timestamp in v:
         when = timestamp.contents[0]
-        title = userContent.select('p')[0].contents[0].strip()
+        title = userContent.select('p')
+        if title == []:
+            title = "(텍스트가 없는 소식)"
+        else :
+            title = title[0].contents[0].strip()
         items.append((when+':: '+title, url))
     return items
 
